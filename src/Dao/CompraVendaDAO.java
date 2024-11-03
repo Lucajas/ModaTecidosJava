@@ -86,56 +86,65 @@ public class CompraVendaDAO {
 	        e.printStackTrace();
 	    }
 	}
-	 public List<CompraVenda> listarTodasCompras() {
-	        List<CompraVenda> compras = new ArrayList<>();
+	public List<CompraVenda> listarTodasCompras() {
+	    List<CompraVenda> compras = new ArrayList<>();
 
-	        try (Connection conexao = DatabaseConnection.getConnection()) {
-	            String sql = "SELECT * FROM compravenda WHERE tipoTransacao = 'COMPRA'";
-	            PreparedStatement stmt = conexao.prepareStatement(sql);
-	            ResultSet rs = stmt.executeQuery();
+	    try (Connection conexao = DatabaseConnection.getConnection()) {
+	        String sql = "SELECT compravenda.*, produtos.nome AS nomeProduto " +
+	                     "FROM compravenda " +
+	                     "INNER JOIN produtos ON compravenda.idProduto = produtos.id " +
+	                     "WHERE tipoTransacao = 'COMPRA'";
+	        PreparedStatement stmt = conexao.prepareStatement(sql);
+	        ResultSet rs = stmt.executeQuery();
 
-	            while (rs.next()) {
-	                Produto produto = new Produto(rs.getInt("idProduto"));
-	                int idLoja = rs.getInt("idLoja");
-	                String tipoTransacao = rs.getString("tipoTransacao");
-	                int quantidade = rs.getInt("quantidade");
-	                double valorUnitario = rs.getDouble("valorUnitario");
-	                java.util.Date dataTransacao = rs.getDate("dataTransacao");
+	        while (rs.next()) {
+	            Produto produto = new Produto(rs.getInt("idProduto"));
+	            produto.setNome(rs.getString("nomeProduto")); // Atribui o nome do produto
+	            int idLoja = rs.getInt("idLoja");
+	            String tipoTransacao = rs.getString("tipoTransacao");
+	            int quantidade = rs.getInt("quantidade");
+	            double valorUnitario = rs.getDouble("valorUnitario");
+	            java.util.Date dataTransacao = rs.getDate("dataTransacao");
 
-	                CompraVenda compra = new CompraVenda(rs.getInt("idTransacao"), produto, idLoja, tipoTransacao, quantidade, dataTransacao, valorUnitario);
-	                compras.add(compra);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
+	            CompraVenda compra = new CompraVenda(rs.getInt("idTransacao"), produto, idLoja, tipoTransacao, quantidade, dataTransacao, valorUnitario);
+	            compras.add(compra);
 	        }
-
-	        return compras;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
 	    }
 
+	    return compras;
+	}
+
 	    // Método para listar todas as vendas
-	    public List<CompraVenda> listarTodasVendas() {
-	        List<CompraVenda> vendas = new ArrayList<>();
+	public List<CompraVenda> listarTodasVendas() {
+	    List<CompraVenda> vendas = new ArrayList<>();
 
-	        try (Connection conexao = DatabaseConnection.getConnection()) {
-	            String sql = "SELECT * FROM compravenda WHERE tipoTransacao = 'VENDA'";
-	            PreparedStatement stmt = conexao.prepareStatement(sql);
-	            ResultSet rs = stmt.executeQuery();
+	    try (Connection conexao = DatabaseConnection.getConnection()) {
+	        String sql = "SELECT compravenda.*, produtos.nome AS nomeProduto " +
+	                     "FROM compravenda " +
+	                     "INNER JOIN produtos ON compravenda.idProduto = produtos.id " +
+	                     "WHERE tipoTransacao = 'VENDA'";
+	        PreparedStatement stmt = conexao.prepareStatement(sql);
+	        ResultSet rs = stmt.executeQuery();
 
-	            while (rs.next()) {
-	                Produto produto = new Produto(rs.getInt("idProduto"));
-	                int idLoja = rs.getInt("idLoja");
-	                String tipoTransacao = rs.getString("tipoTransacao");
-	                int quantidade = rs.getInt("quantidade");
-	                double valorUnitario = rs.getDouble("valorUnitario");
-	                java.util.Date dataTransacao = rs.getDate("dataTransacao");
+	        while (rs.next()) {
+	            Produto produto = new Produto(rs.getInt("idProduto"));
+	            produto.setNome(rs.getString("nomeProduto")); // Atribui o nome do produto
+	            int idLoja = rs.getInt("idLoja");
+	            String tipoTransacao = rs.getString("tipoTransacao");
+	            int quantidade = rs.getInt("quantidade");
+	            double valorUnitario = rs.getDouble("valorUnitario");
+	            java.util.Date dataTransacao = rs.getDate("dataTransacao");
 
-	                CompraVenda venda = new CompraVenda(rs.getInt("idTransacao"), produto, idLoja, tipoTransacao, quantidade, dataTransacao, valorUnitario);
-	                vendas.add(venda);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
+	            CompraVenda venda = new CompraVenda(rs.getInt("idTransacao"), produto, idLoja, tipoTransacao, quantidade, dataTransacao, valorUnitario);
+	            vendas.add(venda);
 	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 
-	        return vendas;
-	    } 	 
+	    return vendas;
+	}
+
 }

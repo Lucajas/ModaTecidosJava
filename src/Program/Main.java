@@ -1,10 +1,11 @@
 package Program;
 
-import javax.swing.SwingUtilities;
-
-import Gui.ProdutoGUI;
+import Gui.MainGUI;
 
 public class Main {
-	  public static void main(String[] args) {
-	        SwingUtilities.invokeLater(() -> new ProdutoGUI());}
-   }
+
+	 public static void main(String[] args) {
+	        new MainGUI();
+	    }
+
+}
